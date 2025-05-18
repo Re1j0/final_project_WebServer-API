@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Список шрифтов</h1>
+    <ul class="list-group">
+        {% for font_key, font in fonts.items() %}
+        <li class="list-group-item">
+            <div style="font-family: '{{ font_key }}'; font-size: 20px;">
+                Пример текста с шрифтом "{{ font.name }}": <strong>Текст для предпросмотра</strong>
+            </div>
+            <a href="{{ url_for('font_detail', font_name=font_key) }}">Подробнее</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

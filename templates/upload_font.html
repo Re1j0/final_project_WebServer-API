@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Опубликовать Шрифт</h1>
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    {{ form.font_name.label }} {{ form.font_name(size=32) }}<br>
+    {{ form.font_file.label }} {{ form.font_file() }}<br>
+    {{ form.submit() }}
+</form>
+{% endblock %}

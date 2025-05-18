@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ font.name }}</h2>
+    <p>{{ font.description }}</p>
+
+    <a href="{{ font.file }}" class="btn btn-success" download>Скачать шрифт</a>
+
+    <h3>Предпросмотр шрифта</h3>
+    <div style="font-family: '{{ font.name }}'; font-size: 24px; border: 1px solid #ccc; padding: 10px;">
+        <span id="preview-text">Ваш текст здесь</span>
+    </div>
+
+    <input type="text" id="text-input" class="form-control mt-3" placeholder="Введите текст для предпросмотра">
+</div>
+
+<script>
+    const textInput = document.getElementById('text-input');
+    const previewText = document.getElementById('preview-text');
+
+    textInput.addEventListener('input', function() {
+        previewText.textContent = this.value || 'Ваш текст здесь';
+    });
+</script>
+{% endblock %}

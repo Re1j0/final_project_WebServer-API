@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Найденные шрифты</h1>
+
+<div class="mb-3">
+    <a href="{{ url_for('fonts') }}" class="btn btn-secondary">Вернуться к шрифтам</a>
+</div>
+
+<div id="noFontsMessage" style="display: {% if font_files|length == 0 %}block{% else %}none{% endif %}; color: red;">
+    По вашему запросу не найдено шрифтов.
+</div>
+
+<ul class="list-group" id="fontList" style="display: {% if font_files|length == 0 %}none{% else %}block{% endif %};">
+    {% for font in font_files %}
+    <li class="list-group-item font-item">
+        <h3>{{ font }}</h3>
+        <div class="font-preview" id="preview-{{ loop.index }}">
+            <span style="font-family: '{{ font }}';">The quick brown fox jumps over the lazy dog.</span>
+        </div>
+        <input type="text" id="input-{{ loop.index }}" placeholder="Введите ваш текст"
+               oninput="updatePreview('{{ font }}', {{ loop.index }})">
+        <button class="btn btn-primary mt-2" onclick="downloadFont('{{ font }}')">Скачать шрифт</button>
+    </li>
+    {% endfor %}
+</ul>
+
+<style>
+    .font-preview {
+        margin-top: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        display: inline-block;
+        width: 100%;
+    }
+    .pagination {
+        margin-top: 20px;
+        text-align: center;
+    }
+    .pagination a {
+        margin: 0 5px;
+    }
+    .spacer {
+        height: 50px;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for font in font_files %}
+            var fontName = '{{ font }}';
+            var fontUrl = "{{ url_for('static', filename='fonts/' + font) }}";
+            var style = document.createElement('style');
+            style.innerHTML = "@font-face { font-family: '" + fontName + "'; src: url('" + fontUrl + "'); }";
+            document.head.appendChild(style);
+        {% endfor %}
+    });
+
+    function updatePreview(fontName, index) {
+        var inputText = document.getElementById('input-' + index).value;
+        var previewElement = document.getElementById('preview-' + index).getElementsByTagName('span')[0];
+        previewElement.textContent = inputText || 'The quick brown fox jumps over the lazy dog.';
+        previewElement.style.fontFamily = fontName;
+    }
+
+    function downloadFont(fontName) {
+        var link = document.createElement('a');
+        link.href = "{{ url_for('static', filename='fonts/') }}" + fontName;
+        link.download = fontName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function filterFonts() {
+        var input = document.getElementById('fontSearch').value.toLowerCase();
+        var items = document.querySelectorAll('.font-item');
+        var found = false;
+
+        items.forEach(function(item) {
+            var fontName = item.querySelector('h3').textContent.toLowerCase();
+            if (fontName.includes(input)) {
+                item.style.display = '';
+                found = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        document.getElementById('noFontsMessage').style.display = found ? 'none' : 'block';
+    }
+</script>
+
+<div class="spacer"></div>
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="{{ url_for('fonts', page=page-1) }}" class="btn btn-secondary">Предыдущая страница</a>
+    {% endif %}
+
+    {% for p in range(1, (total_fonts // per_page) + 2) %}
+    <a href="{{ url_for('fonts', page=p) }}" class="btn btn-secondary {% if p == page %}active{% endif %}">{{ p }}</a>
+    {% endfor %}
+
+    {% if page * per_page < total_fonts %}
+    <a href="{{ url_for('fonts', page=page+1) }}" class="btn btn-secondary">Следующая страница</a>
+    {% endif %}
+</div>
+<div class="spacer"></div>
+<div class="spacer"></div>
+{% endblock %}

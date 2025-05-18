@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container text-center">
+    <h1>Добро пожаловать!</h1>
+    <p>Здесь вы можете найти и добавить свои любимые шрифты.</p>
+
+    <div class="btn-group" role="group" aria-label="Basic example">
+        {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('login') }}" class="btn btn-primary">Войти</a>
+        <a href="{{ url_for('register') }}" class="btn btn-secondary">Зарегистрироваться</a>
+        {% else %}
+        <span class="btn btn-secondary disabled">Вы вошли как {{ current_user.username }}</span>
+        {% endif %}
+        <a href="{{ url_for('upload') }}" class="btn btn-success">Добавить свой шрифт</a>
+    </div>
+    <div class="mt-4">
+        <a href="{{ url_for('fonts') }}" class="btn btn-outline-primary">Открыть все шрифты</a>
+    </div>
+</div>
+{% endblock %}

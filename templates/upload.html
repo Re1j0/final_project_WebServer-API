@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Загрузить шрифт</h1>
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.font_file.label(class="form-label") }}
+        {{ form.font_file(class="form-control", onchange="previewFont(event)") }}
+        <div id="file-error" class="text-danger" style="display: none;"></div>
+    </div>
+    <div class="form-group">
+        <label for="custom-text">Введите текст для предпросмотра:</label>
+        <input type="text" id="custom-text" class="form-control" oninput="updatePreviewText()" placeholder="Ваш текст...">
+    </div>
+    <div id="font-preview" style="margin-top: 20px; display: none;">
+        <h5>Предпросмотр шрифта:</h5>
+        <p id="preview-text" style="font-size: 24px;">Это пример текста с загружаемым шрифтом.</p>
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+
+<script>
+function previewFont(event) {
+    const file = event.target.files[0];
+    const validExtensions = ['.ttf', '.otf', '.woff', '.woff2'];
+    const fileErrorElement = document.getElementById('file-error');
+
+    fileErrorElement.style.display = 'none';
+    fileErrorElement.textContent = '';
+
+    if (file) {
+        const fileName = file.name;
+        const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
+
+        if (!validExtensions.includes('.' + fileExtension)) {
+            fileErrorElement.textContent = 'Недопустимый формат файла. Пожалуйста, загрузите файл в формате .ttf, .otf, .woff или .woff2.';
+            fileErrorElement.style.display = 'block';
+            document.getElementById('font-preview').style.display = 'none';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const fontFace = new FontFace('UploadedFont', e.target.result);
+            fontFace.load().then(function() {
+                document.fonts.add(fontFace);
+                document.getElementById('preview-text').style.fontFamily = 'UploadedFont';
+                document.getElementById('font-preview').style.display = 'block';
+                updatePreviewText();
+            });
+        };
+        reader.readAsArrayBuffer(file);
+    }
+}
+
+function updatePreviewText() {
+    const customText = document.getElementById('custom-text').value;
+    document.getElementById('preview-text').textContent = customText || "Это пример текста с загружаемым шрифтом.";
+}
+</script>
+{% endblock %}
