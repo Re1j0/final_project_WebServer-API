@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d1ddaf64-48e3-4a4d-ab31-8f23df562e8e" name="Changes" comment="final_commit">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/24_19970.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/_virtualenv.pth" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/_virtualenv.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/distutils-precedence.pth" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/pip-23.2.1.virtualenv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/setuptools-68.2.0.virtualenv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/typing_extensions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wheel-0.41.2.virtualenv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms-3.2.1.dist-info/INSTALLER" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms-3.2.1.dist-info/METADATA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms-3.2.1.dist-info/RECORD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms-3.2.1.dist-info/WHEEL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms-3.2.1.dist-info/licenses/LICENSE.rst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms/form.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms/i18n.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms/meta.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms/validators.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms/widgets/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/wtforms/widgets/core.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp-3.21.0.dist-info/INSTALLER" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp-3.21.0.dist-info/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp-3.21.0.dist-info/METADATA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp-3.21.0.dist-info/RECORD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp-3.21.0.dist-info/WHEEL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp-3.21.0.dist-info/top_level.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp/_functools.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp/compat/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp/compat/overlay.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp/compat/py310.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/site-packages/zipp/glob.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/activate" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/activate.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/activate.fish" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/activate.nu" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/activate.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/activate_this.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/deactivate.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/flask.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/pip-3.9.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/pip.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/pip3.9.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/pip3.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/pydoc.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/python.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/pythonw.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/wheel-3.9.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/wheel.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/wheel3.9.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scripts/wheel3.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyvenv.cfg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/20421.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/20443.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/20780.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/20851.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/21063.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/Arial.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/MP_Manga.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/USSR_STENCIL.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/Zaychik-Regular.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/pobeda-regular.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/vezitsacyrillic.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/profpicture.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/update.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/already_authenticated.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/font_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/font_list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/fonts.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/search.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/upload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/upload_font.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/var/app-instance/users.db" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2wtntuQOKe5RYxAoVv3xhGyPGrG" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/march/PycharmProjects/pythonProject9",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\march\PycharmProjects\pythonProject9" />
+      <recent name="C:\Users\Владимир\PycharmProjects\pythonProject9" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-98f27166c754-ba05f1cad1b1-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.21829.153" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d1ddaf64-48e3-4a4d-ab31-8f23df562e8e" name="Changes" comment="" />
+      <created>1746869956078</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1746869956078</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Lib/site-packages/zipp/_functools.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
