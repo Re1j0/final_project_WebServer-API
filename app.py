@@ -31,8 +31,88 @@ def get_all_fonts():
             file_path = os.path.join(font_dir, filename)
             file_size = os.path.getsize(file_path) / 1024
             font_files.append({'name': filename, 'size': round(file_size, 2)})
+    if True:
+        return font_files
+    form = UploadFontForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        try:
+            font_file = form.font_file.data
+            if not font_file or font_file.filename == '':
+                flash('Не выбран файл для загрузки', 'danger')
+                app.logger.error('Attempt to upload empty file')
+                return redirect(url_for('upload'))
 
-    return font_files
+            filename = secure_filename(font_file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+            allowed_extensions = {'.ttf', '.otf', '.woff', '.woff2'}
+            file_ext = os.path.splitext(filename)[1].lower()
+            if file_ext not in allowed_extensions:
+                flash('Недопустимый формат файла. Разрешены: .ttf, .otf, .woff, .woff2', 'danger')
+                app.logger.warning(f'Invalid file extension attempt: {file_ext}')
+                return redirect(url_for('upload'))
+
+            if os.path.exists(file_path):
+                flash('Файл с таким именем уже существует', 'danger')
+                app.logger.info(f'File conflict detected: {filename}')
+                return redirect(url_for('upload'))
+
+            mime_type = font_file.content_type
+            valid_mime_types = ['font/ttf', 'font/otf', 'application/font-woff']
+            if mime_type not in valid_mime_types:
+                flash('Неверный тип файла', 'danger')
+                app.logger.error(f'Invalid MIME type detected: {mime_type}')
+                return redirect(url_for('upload'))
+
+            try:
+                font_file.save(file_path)
+                app.logger.info(f'File saved successfully: {filename}')
+            except IOError as e:
+                flash('Ошибка сохранения файла', 'danger')
+                app.logger.error(f'File save error: {str(e)}')
+                return redirect(url_for('upload'))
+
+            try:
+                new_font = Font(
+                    filename=filename,
+                    original_filename=font_file.filename,
+                    user_id=current_user.id,
+                    file_size=os.path.getsize(file_path),
+                    upload_ip=request.remote_addr
+                )
+                db.session.add(new_font)
+                current_user.uploads_count = Font.query.filter_by(user_id=current_user.id).count()
+                db.session.commit()
+                app.logger.info(f'New font record created: ID {new_font.id}')
+
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                flash('Ошибка базы данных', 'danger')
+                app.logger.critical(f'Database error: {str(e)}')
+                return redirect(url_for('upload'))
+            except Exception as e:
+                app.logger.warning(f'Thumbnail generation failed: {str(e)}')
+
+            flash('Шрифт успешно опубликован', 'success')
+            app.logger.info(f'User #{current_user.id} uploaded font: {filename}')
+
+            return redirect(url_for('font_detail', font_id=new_font.id))
+
+        except Exception as e:
+            flash('Произошла непредвиденная ошибка', 'danger')
+            app.logger.error(f'Upload process error: {str(e)}')
+            return redirect(url_for('upload'))
+
+    app.logger.info(f'User #{current_user.id} accessed upload page')
+
+    return render_template(
+        'upload.html',
+        form=form,
+        user_uploads=Font.query.filter_by(user_id=current_user.id).count(),
+        storage_quota=current_user.storage_quota,
+        remaining_space=current_user.get_remaining_space(),
+        latest_uploads=Font.query.order_by(Font.upload_date.desc()).limit(5).all()
+    )
 
 
 @login_manager.user_loader
@@ -81,6 +161,86 @@ def fonts():
 
     return render_template('fonts.html', font_files=fonts_to_display, page=page, total_fonts=total_fonts,
                            per_page=per_page)
+    form = UploadFontForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        try:
+            font_file = form.font_file.data
+            if not font_file or font_file.filename == '':
+                flash('Не выбран файл для загрузки', 'danger')
+                app.logger.error('Attempt to upload empty file')
+                return redirect(url_for('upload'))
+
+            filename = secure_filename(font_file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+            allowed_extensions = {'.ttf', '.otf', '.woff', '.woff2'}
+            file_ext = os.path.splitext(filename)[1].lower()
+            if file_ext not in allowed_extensions:
+                flash('Недопустимый формат файла. Разрешены: .ttf, .otf, .woff, .woff2', 'danger')
+                app.logger.warning(f'Invalid file extension attempt: {file_ext}')
+                return redirect(url_for('upload'))
+
+            if os.path.exists(file_path):
+                flash('Файл с таким именем уже существует', 'danger')
+                app.logger.info(f'File conflict detected: {filename}')
+                return redirect(url_for('upload'))
+
+            mime_type = font_file.content_type
+            valid_mime_types = ['font/ttf', 'font/otf', 'application/font-woff']
+            if mime_type not in valid_mime_types:
+                flash('Неверный тип файла', 'danger')
+                app.logger.error(f'Invalid MIME type detected: {mime_type}')
+                return redirect(url_for('upload'))
+
+            try:
+                font_file.save(file_path)
+                app.logger.info(f'File saved successfully: {filename}')
+            except IOError as e:
+                flash('Ошибка сохранения файла', 'danger')
+                app.logger.error(f'File save error: {str(e)}')
+                return redirect(url_for('upload'))
+
+            try:
+                new_font = Font(
+                    filename=filename,
+                    original_filename=font_file.filename,
+                    user_id=current_user.id,
+                    file_size=os.path.getsize(file_path),
+                    upload_ip=request.remote_addr
+                )
+                db.session.add(new_font)
+                current_user.uploads_count = Font.query.filter_by(user_id=current_user.id).count()
+                db.session.commit()
+                app.logger.info(f'New font record created: ID {new_font.id}')
+
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                flash('Ошибка базы данных', 'danger')
+                app.logger.critical(f'Database error: {str(e)}')
+                return redirect(url_for('upload'))
+            except Exception as e:
+                app.logger.warning(f'Thumbnail generation failed: {str(e)}')
+
+            flash('Шрифт успешно опубликован', 'success')
+            app.logger.info(f'User #{current_user.id} uploaded font: {filename}')
+
+            return redirect(url_for('font_detail', font_id=new_font.id))
+
+        except Exception as e:
+            flash('Произошла непредвиденная ошибка', 'danger')
+            app.logger.error(f'Upload process error: {str(e)}')
+            return redirect(url_for('upload'))
+
+    app.logger.info(f'User #{current_user.id} accessed upload page')
+
+    return render_template(
+        'upload.html',
+        form=form,
+        user_uploads=Font.query.filter_by(user_id=current_user.id).count(),
+        storage_quota=current_user.storage_quota,
+        remaining_space=current_user.get_remaining_space(),
+        latest_uploads=Font.query.order_by(Font.upload_date.desc()).limit(5).all()
+    )
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -118,6 +278,86 @@ def login():
             flash('Такого аккаунта не существует. Проверьте имя или пароль.', 'danger')
 
     return render_template('login.html', form=form)
+    form = UploadFontForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        try:
+            font_file = form.font_file.data
+            if not font_file or font_file.filename == '':
+                flash('Не выбран файл для загрузки', 'danger')
+                app.logger.error('Attempt to upload empty file')
+                return redirect(url_for('upload'))
+
+            filename = secure_filename(font_file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+            allowed_extensions = {'.ttf', '.otf', '.woff', '.woff2'}
+            file_ext = os.path.splitext(filename)[1].lower()
+            if file_ext not in allowed_extensions:
+                flash('Недопустимый формат файла. Разрешены: .ttf, .otf, .woff, .woff2', 'danger')
+                app.logger.warning(f'Invalid file extension attempt: {file_ext}')
+                return redirect(url_for('upload'))
+
+            if os.path.exists(file_path):
+                flash('Файл с таким именем уже существует', 'danger')
+                app.logger.info(f'File conflict detected: {filename}')
+                return redirect(url_for('upload'))
+
+            mime_type = font_file.content_type
+            valid_mime_types = ['font/ttf', 'font/otf', 'application/font-woff']
+            if mime_type not in valid_mime_types:
+                flash('Неверный тип файла', 'danger')
+                app.logger.error(f'Invalid MIME type detected: {mime_type}')
+                return redirect(url_for('upload'))
+
+            try:
+                font_file.save(file_path)
+                app.logger.info(f'File saved successfully: {filename}')
+            except IOError as e:
+                flash('Ошибка сохранения файла', 'danger')
+                app.logger.error(f'File save error: {str(e)}')
+                return redirect(url_for('upload'))
+
+            try:
+                new_font = Font(
+                    filename=filename,
+                    original_filename=font_file.filename,
+                    user_id=current_user.id,
+                    file_size=os.path.getsize(file_path),
+                    upload_ip=request.remote_addr
+                )
+                db.session.add(new_font)
+                current_user.uploads_count = Font.query.filter_by(user_id=current_user.id).count()
+                db.session.commit()
+                app.logger.info(f'New font record created: ID {new_font.id}')
+
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                flash('Ошибка базы данных', 'danger')
+                app.logger.critical(f'Database error: {str(e)}')
+                return redirect(url_for('upload'))
+            except Exception as e:
+                app.logger.warning(f'Thumbnail generation failed: {str(e)}')
+
+            flash('Шрифт успешно опубликован', 'success')
+            app.logger.info(f'User #{current_user.id} uploaded font: {filename}')
+
+            return redirect(url_for('font_detail', font_id=new_font.id))
+
+        except Exception as e:
+            flash('Произошла непредвиденная ошибка', 'danger')
+            app.logger.error(f'Upload process error: {str(e)}')
+            return redirect(url_for('upload'))
+
+    app.logger.info(f'User #{current_user.id} accessed upload page')
+
+    return render_template(
+        'upload.html',
+        form=form,
+        user_uploads=Font.query.filter_by(user_id=current_user.id).count(),
+        storage_quota=current_user.storage_quota,
+        remaining_space=current_user.get_remaining_space(),
+        latest_uploads=Font.query.order_by(Font.upload_date.desc()).limit(5).all()
+    )
 
 
 @app.route('/logout', methods=['POST'])
@@ -139,6 +379,86 @@ def upload():
         return redirect(url_for('fonts'))
 
     return render_template('upload.html', form=form)
+    form = UploadFontForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        try:
+            font_file = form.font_file.data
+            if not font_file or font_file.filename == '':
+                flash('Не выбран файл для загрузки', 'danger')
+                app.logger.error('Attempt to upload empty file')
+                return redirect(url_for('upload'))
+
+            filename = secure_filename(font_file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+            allowed_extensions = {'.ttf', '.otf', '.woff', '.woff2'}
+            file_ext = os.path.splitext(filename)[1].lower()
+            if file_ext not in allowed_extensions:
+                flash('Недопустимый формат файла. Разрешены: .ttf, .otf, .woff, .woff2', 'danger')
+                app.logger.warning(f'Invalid file extension attempt: {file_ext}')
+                return redirect(url_for('upload'))
+
+            if os.path.exists(file_path):
+                flash('Файл с таким именем уже существует', 'danger')
+                app.logger.info(f'File conflict detected: {filename}')
+                return redirect(url_for('upload'))
+
+            mime_type = font_file.content_type
+            valid_mime_types = ['font/ttf', 'font/otf', 'application/font-woff']
+            if mime_type not in valid_mime_types:
+                flash('Неверный тип файла', 'danger')
+                app.logger.error(f'Invalid MIME type detected: {mime_type}')
+                return redirect(url_for('upload'))
+
+            try:
+                font_file.save(file_path)
+                app.logger.info(f'File saved successfully: {filename}')
+            except IOError as e:
+                flash('Ошибка сохранения файла', 'danger')
+                app.logger.error(f'File save error: {str(e)}')
+                return redirect(url_for('upload'))
+
+            try:
+                new_font = Font(
+                    filename=filename,
+                    original_filename=font_file.filename,
+                    user_id=current_user.id,
+                    file_size=os.path.getsize(file_path),
+                    upload_ip=request.remote_addr
+                )
+                db.session.add(new_font)
+                current_user.uploads_count = Font.query.filter_by(user_id=current_user.id).count()
+                db.session.commit()
+                app.logger.info(f'New font record created: ID {new_font.id}')
+
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                flash('Ошибка базы данных', 'danger')
+                app.logger.critical(f'Database error: {str(e)}')
+                return redirect(url_for('upload'))
+            except Exception as e:
+                app.logger.warning(f'Thumbnail generation failed: {str(e)}')
+
+            flash('Шрифт успешно опубликован', 'success')
+            app.logger.info(f'User #{current_user.id} uploaded font: {filename}')
+
+            return redirect(url_for('font_detail', font_id=new_font.id))
+
+        except Exception as e:
+            flash('Произошла непредвиденная ошибка', 'danger')
+            app.logger.error(f'Upload process error: {str(e)}')
+            return redirect(url_for('upload'))
+
+    app.logger.info(f'User #{current_user.id} accessed upload page')
+
+    return render_template(
+        'upload.html',
+        form=form,
+        user_uploads=Font.query.filter_by(user_id=current_user.id).count(),
+        storage_quota=current_user.storage_quota,
+        remaining_space=current_user.get_remaining_space(),
+        latest_uploads=Font.query.order_by(Font.upload_date.desc()).limit(5).all()
+    )
 
 
 @app.route('/download/<filename>')
@@ -155,6 +475,86 @@ def get_font_count():
         return jsonify({'count': len(font_files)}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+        form = UploadFontForm()
+        if request.method == 'POST' and form.validate_on_submit():
+            try:
+                font_file = form.font_file.data
+                if not font_file or font_file.filename == '':
+                    flash('Не выбран файл для загрузки', 'danger')
+                    app.logger.error('Attempt to upload empty file')
+                    return redirect(url_for('upload'))
+
+                filename = secure_filename(font_file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+                allowed_extensions = {'.ttf', '.otf', '.woff', '.woff2'}
+                file_ext = os.path.splitext(filename)[1].lower()
+                if file_ext not in allowed_extensions:
+                    flash('Недопустимый формат файла. Разрешены: .ttf, .otf, .woff, .woff2', 'danger')
+                    app.logger.warning(f'Invalid file extension attempt: {file_ext}')
+                    return redirect(url_for('upload'))
+
+                if os.path.exists(file_path):
+                    flash('Файл с таким именем уже существует', 'danger')
+                    app.logger.info(f'File conflict detected: {filename}')
+                    return redirect(url_for('upload'))
+
+                mime_type = font_file.content_type
+                valid_mime_types = ['font/ttf', 'font/otf', 'application/font-woff']
+                if mime_type not in valid_mime_types:
+                    flash('Неверный тип файла', 'danger')
+                    app.logger.error(f'Invalid MIME type detected: {mime_type}')
+                    return redirect(url_for('upload'))
+
+                try:
+                    font_file.save(file_path)
+                    app.logger.info(f'File saved successfully: {filename}')
+                except IOError as e:
+                    flash('Ошибка сохранения файла', 'danger')
+                    app.logger.error(f'File save error: {str(e)}')
+                    return redirect(url_for('upload'))
+
+                try:
+                    new_font = Font(
+                        filename=filename,
+                        original_filename=font_file.filename,
+                        user_id=current_user.id,
+                        file_size=os.path.getsize(file_path),
+                        upload_ip=request.remote_addr
+                    )
+                    db.session.add(new_font)
+                    current_user.uploads_count = Font.query.filter_by(user_id=current_user.id).count()
+                    db.session.commit()
+                    app.logger.info(f'New font record created: ID {new_font.id}')
+
+                except SQLAlchemyError as e:
+                    db.session.rollback()
+                    flash('Ошибка базы данных', 'danger')
+                    app.logger.critical(f'Database error: {str(e)}')
+                    return redirect(url_for('upload'))
+                except Exception as e:
+                    app.logger.warning(f'Thumbnail generation failed: {str(e)}')
+
+                flash('Шрифт успешно опубликован', 'success')
+                app.logger.info(f'User #{current_user.id} uploaded font: {filename}')
+
+                return redirect(url_for('font_detail', font_id=new_font.id))
+
+            except Exception as e:
+                flash('Произошла непредвиденная ошибка', 'danger')
+                app.logger.error(f'Upload process error: {str(e)}')
+                return redirect(url_for('upload'))
+
+        app.logger.info(f'User #{current_user.id} accessed upload page')
+
+        return render_template(
+            'upload.html',
+            form=form,
+            user_uploads=Font.query.filter_by(user_id=current_user.id).count(),
+            storage_quota=current_user.storage_quota,
+            remaining_space=current_user.get_remaining_space(),
+            latest_uploads=Font.query.order_by(Font.upload_date.desc()).limit(5).all()
+        )
 
 
 @app.route('/api/search-font', methods=['GET'])
@@ -184,6 +584,86 @@ def search_font():
             }), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+        form = UploadFontForm()
+        if request.method == 'POST' and form.validate_on_submit():
+            try:
+                font_file = form.font_file.data
+                if not font_file or font_file.filename == '':
+                    flash('Не выбран файл для загрузки', 'danger')
+                    app.logger.error('Attempt to upload empty file')
+                    return redirect(url_for('upload'))
+
+                filename = secure_filename(font_file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+                allowed_extensions = {'.ttf', '.otf', '.woff', '.woff2'}
+                file_ext = os.path.splitext(filename)[1].lower()
+                if file_ext not in allowed_extensions:
+                    flash('Недопустимый формат файла. Разрешены: .ttf, .otf, .woff, .woff2', 'danger')
+                    app.logger.warning(f'Invalid file extension attempt: {file_ext}')
+                    return redirect(url_for('upload'))
+
+                if os.path.exists(file_path):
+                    flash('Файл с таким именем уже существует', 'danger')
+                    app.logger.info(f'File conflict detected: {filename}')
+                    return redirect(url_for('upload'))
+
+                mime_type = font_file.content_type
+                valid_mime_types = ['font/ttf', 'font/otf', 'application/font-woff']
+                if mime_type not in valid_mime_types:
+                    flash('Неверный тип файла', 'danger')
+                    app.logger.error(f'Invalid MIME type detected: {mime_type}')
+                    return redirect(url_for('upload'))
+
+                try:
+                    font_file.save(file_path)
+                    app.logger.info(f'File saved successfully: {filename}')
+                except IOError as e:
+                    flash('Ошибка сохранения файла', 'danger')
+                    app.logger.error(f'File save error: {str(e)}')
+                    return redirect(url_for('upload'))
+
+                try:
+                    new_font = Font(
+                        filename=filename,
+                        original_filename=font_file.filename,
+                        user_id=current_user.id,
+                        file_size=os.path.getsize(file_path),
+                        upload_ip=request.remote_addr
+                    )
+                    db.session.add(new_font)
+                    current_user.uploads_count = Font.query.filter_by(user_id=current_user.id).count()
+                    db.session.commit()
+                    app.logger.info(f'New font record created: ID {new_font.id}')
+
+                except SQLAlchemyError as e:
+                    db.session.rollback()
+                    flash('Ошибка базы данных', 'danger')
+                    app.logger.critical(f'Database error: {str(e)}')
+                    return redirect(url_for('upload'))
+                except Exception as e:
+                    app.logger.warning(f'Thumbnail generation failed: {str(e)}')
+
+                flash('Шрифт успешно опубликован', 'success')
+                app.logger.info(f'User #{current_user.id} uploaded font: {filename}')
+
+                return redirect(url_for('font_detail', font_id=new_font.id))
+
+            except Exception as e:
+                flash('Произошла непредвиденная ошибка', 'danger')
+                app.logger.error(f'Upload process error: {str(e)}')
+                return redirect(url_for('upload'))
+
+        app.logger.info(f'User #{current_user.id} accessed upload page')
+
+        return render_template(
+            'upload.html',
+            form=form,
+            user_uploads=Font.query.filter_by(user_id=current_user.id).count(),
+            storage_quota=current_user.storage_quota,
+            remaining_space=current_user.get_remaining_space(),
+            latest_uploads=Font.query.order_by(Font.upload_date.desc()).limit(5).all()
+        )
 
 
 @app.route('/search/<font_name>', methods=['GET'])
@@ -203,6 +683,86 @@ def search_fonts(font_name):
 
         return render_template('search.html', font_files=fonts_to_display, page=page, total_fonts=total_fonts,
                                per_page=per_page)
+        form = UploadFontForm()
+        if request.method == 'POST' and form.validate_on_submit():
+            try:
+                font_file = form.font_file.data
+                if not font_file or font_file.filename == '':
+                    flash('Не выбран файл для загрузки', 'danger')
+                    app.logger.error('Attempt to upload empty file')
+                    return redirect(url_for('upload'))
+
+                filename = secure_filename(font_file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+                allowed_extensions = {'.ttf', '.otf', '.woff', '.woff2'}
+                file_ext = os.path.splitext(filename)[1].lower()
+                if file_ext not in allowed_extensions:
+                    flash('Недопустимый формат файла. Разрешены: .ttf, .otf, .woff, .woff2', 'danger')
+                    app.logger.warning(f'Invalid file extension attempt: {file_ext}')
+                    return redirect(url_for('upload'))
+
+                if os.path.exists(file_path):
+                    flash('Файл с таким именем уже существует', 'danger')
+                    app.logger.info(f'File conflict detected: {filename}')
+                    return redirect(url_for('upload'))
+
+                mime_type = font_file.content_type
+                valid_mime_types = ['font/ttf', 'font/otf', 'application/font-woff']
+                if mime_type not in valid_mime_types:
+                    flash('Неверный тип файла', 'danger')
+                    app.logger.error(f'Invalid MIME type detected: {mime_type}')
+                    return redirect(url_for('upload'))
+
+                try:
+                    font_file.save(file_path)
+                    app.logger.info(f'File saved successfully: {filename}')
+                except IOError as e:
+                    flash('Ошибка сохранения файла', 'danger')
+                    app.logger.error(f'File save error: {str(e)}')
+                    return redirect(url_for('upload'))
+
+                try:
+                    new_font = Font(
+                        filename=filename,
+                        original_filename=font_file.filename,
+                        user_id=current_user.id,
+                        file_size=os.path.getsize(file_path),
+                        upload_ip=request.remote_addr
+                    )
+                    db.session.add(new_font)
+                    current_user.uploads_count = Font.query.filter_by(user_id=current_user.id).count()
+                    db.session.commit()
+                    app.logger.info(f'New font record created: ID {new_font.id}')
+
+                except SQLAlchemyError as e:
+                    db.session.rollback()
+                    flash('Ошибка базы данных', 'danger')
+                    app.logger.critical(f'Database error: {str(e)}')
+                    return redirect(url_for('upload'))
+                except Exception as e:
+                    app.logger.warning(f'Thumbnail generation failed: {str(e)}')
+
+                flash('Шрифт успешно опубликован', 'success')
+                app.logger.info(f'User #{current_user.id} uploaded font: {filename}')
+
+                return redirect(url_for('font_detail', font_id=new_font.id))
+
+            except Exception as e:
+                flash('Произошла непредвиденная ошибка', 'danger')
+                app.logger.error(f'Upload process error: {str(e)}')
+                return redirect(url_for('upload'))
+
+        app.logger.info(f'User #{current_user.id} accessed upload page')
+
+        return render_template(
+            'upload.html',
+            form=form,
+            user_uploads=Font.query.filter_by(user_id=current_user.id).count(),
+            storage_quota=current_user.storage_quota,
+            remaining_space=current_user.get_remaining_space(),
+            latest_uploads=Font.query.order_by(Font.upload_date.desc()).limit(5).all()
+        )
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
